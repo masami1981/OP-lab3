@@ -6,8 +6,7 @@ CONFIG -= qt
 SOURCES += main.cpp
 
 OTHER_FILES += \
-<<<<<<< HEAD \
-    README.md
+<<<<<<< HEAD
     README.md
 =======
     ../README.md
