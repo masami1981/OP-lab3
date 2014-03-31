@@ -50,8 +50,8 @@ public:
         return this->sluzbenik;
     }
 
-    bool ObradaZahtjeva(cZahtjev * zahtjev){
-        return zahtjev->set_dok_ok();
+    bool ObradaZahtjeva(cZahtjev * zahtjev, int sluz){
+        return zahtjev->set_dok_ok(sluz);
     }
 };
 
@@ -112,6 +112,7 @@ int main()
     cSluzbenik sluzbenik[BR_SLUZ];
     for(int i=0; i<BR_SLUZ ; i++)
         sluzbenik[i].set_sluz(i+1);
+/*
     zahtjev = new cZahtjev("hbjkhb", "7trfzubj", "bla", true, true, true);
     neobradeni->SpremiZahtjev(zahtjev);
     zahtjev = new cZahtjev("34sgs553", "53255dsfgf", "bla", true, true, true );
@@ -124,7 +125,7 @@ int main()
     neobradeni->SpremiZahtjev(zahtjev);
     zahtjev = new cZahtjev("1w534q324", "fas", "dfgsabla", true, true, true);
     neobradeni->SpremiZahtjev(zahtjev);
-
+*/
 
 
     /*
