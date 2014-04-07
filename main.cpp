@@ -2,6 +2,7 @@
 #include <string>
 #define BR_SLUZ 5
 //#define TEST
+#define ZAHTJEVI
 
 using namespace std;
 
@@ -90,6 +91,19 @@ public:
         }
     }
 
+    void IspisSvihZathjeva(){
+        if(this->next != NULL){
+            cLista * tmp=this->next;
+            while(1){
+                cout << tmp->zahtjev->get_zahtjev() << endl;
+                if(tmp->next != NULL)
+                    tmp = tmp->next;
+                else
+                    break;
+            }
+        }
+    }
+
     cLista(){
         this->next = NULL;
         this->tail = NULL;
@@ -97,14 +111,25 @@ public:
     }
 
     ~cLista(){
-        while(this->next != NULL){
-            delete zahtjev;
-            zahtjev = NULL;
-            this->zahtjev = this->next->zahtjev;
-            this->next = this->next->next;
+        cLista * tmp = new cLista;
+        while(1){
+            tmp = this->next;
+            if (tmp != NULL)
+            {
+                delete tmp->zahtjev;
+                if (this->next->next != NULL)
+                {
+                    this->next->zahtjev = this->next->next->zahtjev;
+                    this->next = this->next->next;
+                }
+                else
+                    break;
+                tmp->next = NULL;
+            }
+            else
+                break;
         }
-        delete zahtjev;
-        zahtjev = NULL;
+        delete tmp;
     }
 };
 
@@ -116,7 +141,22 @@ int main()
     cSluzbenik sluzbenik[BR_SLUZ];
     for(int i=0; i<BR_SLUZ ; i++)
         sluzbenik[i].set_sluz(i+1);
+
 #ifndef TEST
+#ifdef ZAHTJEVI
+    zahtjev = new cZahtjev("hbjkhb", "7trfzubj", "bla", true, true, true);
+    neobradeni->SpremiZahtjev(zahtjev);
+    zahtjev = new cZahtjev("34sgs553", "53255dsfgf", "bla", true, true, true );
+    neobradeni->SpremiZahtjev(zahtjev);
+    zahtjev = new cZahtjev("1324", "214dwqwd", "bl64a", true, true, true);
+    neobradeni->SpremiZahtjev(zahtjev);
+    zahtjev = new cZahtjev("67568", "arweatr", "6wqbla", true, false, true);
+    neobradeni->SpremiZahtjev(zahtjev);
+    zahtjev = new cZahtjev("1324we64", "afawr", "rqw", true, true, true);
+    neobradeni->SpremiZahtjev(zahtjev);
+    zahtjev = new cZahtjev("1w534q324", "fas", "dfgsabla", false, true, true);
+    neobradeni->SpremiZahtjev(zahtjev);
+#endif
 
     int i;
     string str;
@@ -125,6 +165,7 @@ int main()
         cout << "1 - Novi zahtjev" << endl;
         cout << "2 - Obradi zahtjev" << endl;
         cout << "3 - Ispiši riješene predmete" << endl;
+        cout << "Bilo koji drugi broj za prekid" << endl;
         cin >> str;
         if(str == "1"){
             string ime, prez, adr;
@@ -176,10 +217,9 @@ int main()
         }
         else if(str == "3"){
             cout << string( 100, '\n' );
-
+            obradeni->IspisSvihZathjeva();
             cin.get();
             cin.get();
-
         }
         else break;
     }
@@ -235,6 +275,8 @@ int main()
 
     delete neobradeni;
     neobradeni = NULL;
+    delete obradeni;
+    obradeni = NULL;
     delete zahtjev;
     zahtjev = NULL;
     return 0;
