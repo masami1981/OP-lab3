@@ -51,46 +51,49 @@ public:
         return this->sluzbenik;
     }
 
-    bool ObradaZahtjeva(cZahtjev * zahtjev, int sluz){
-        return zahtjev->set_dok_ok(sluz);
+    bool ObradaZahtjeva(cZahtjev * zahtjev){
+        return zahtjev->set_dok_ok(sluzbenik);
     }
 };
 
 class cLista{
     cZahtjev * zahtjev;
     cLista * next;
+    cLista * tail;
+    //cLista * head; // this->head = this->next;
 public:
     void SpremiZahtjev(cZahtjev * zahtjev){
         cLista * tmp1 = new cLista;
         tmp1->zahtjev =  zahtjev;
         tmp1->next = NULL;
-        cLista * tmp2 = new cLista;
-        tmp2 = this;
-        if(this->zahtjev == NULL)
-            this->zahtjev = tmp1->zahtjev;
+        tmp1->tail = NULL;
+        if (this->next == NULL)
+            this->next = tmp1;
         else
-        {
+            this->tail->next = tmp1;
 
-            while(tmp2->next != NULL ){
-                tmp2=tmp2->next;
-            }
-            tmp2->next = tmp1;
-        }
+        this->tail = tmp1;
     }
 
     cZahtjev * DohvatiZahtjev(){
-        if(this->zahtjev == NULL) return NULL;
+        if(this->next == NULL) return NULL;
         else {
-            cZahtjev * tmp = this->zahtjev;
-            if(this->next != NULL){
-                this->zahtjev = this->next->zahtjev;
-                this->next = this->next->next;
-            }
-            else{
-                this->zahtjev = NULL;
-            }
+            cLista * first = this->next;
+            cZahtjev * tmp = first->zahtjev;
+            this->next = this->next->next;
+            first->zahtjev = NULL;
+            first->next = NULL;
+            first->tail = NULL;
+            delete first;
+            first = NULL;
             return tmp;
         }
+    }
+
+    cLista(){
+        this->next = NULL;
+        this->tail = NULL;
+        // this->head = this->next;
     }
 
     ~cLista(){
@@ -152,7 +155,7 @@ int main()
             cout << "Upiši broj službenika (1 do " << BR_SLUZ << "): ";
             cin >> i;
             if ((zahtjev = neobradeni->DohvatiZahtjev()) != NULL){
-                if(sluzbenik[i].ObradaZahtjeva(zahtjev, i)){
+                if(sluzbenik[i-1].ObradaZahtjeva(zahtjev)){
                     obradeni->SpremiZahtjev(zahtjev);
                     cout << "Dokumentacija potpuna. Zahtjev obrađen." << endl;
                     cin.get();
@@ -187,28 +190,47 @@ int main()
     neobradeni->SpremiZahtjev(zahtjev);
     zahtjev = new cZahtjev("1324", "214dwqwd", "bl64a", true, true, true);
     neobradeni->SpremiZahtjev(zahtjev);
-    zahtjev = new cZahtjev("67568", "arweatr", "6wqbla", true, true, true);
+    zahtjev = new cZahtjev("67568", "arweatr", "6wqbla", true, false, true);
     neobradeni->SpremiZahtjev(zahtjev);
     zahtjev = new cZahtjev("1324we64", "afawr", "rqw", true, true, true);
     neobradeni->SpremiZahtjev(zahtjev);
-    zahtjev = new cZahtjev("1w534q324", "fas", "dfgsabla", true, true, true);
+    zahtjev = new cZahtjev("1w534q324", "fas", "dfgsabla", false, true, true);
     neobradeni->SpremiZahtjev(zahtjev);
+    cLista * temp = new cLista;
+    do
+    {
+        zahtjev = neobradeni->DohvatiZahtjev();
+//        cout << zahtjev->get_zahtjev() << endl;
+        if(sluzbenik[1].ObradaZahtjeva(zahtjev))
+        {
+            cout << "Obrađen:   " << zahtjev->get_zahtjev() << endl;
+            obradeni->SpremiZahtjev(zahtjev);
 
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
-    zahtjev = neobradeni->DohvatiZahtjev();
-    cout << zahtjev->get_zahtjev() << endl;
+        }
+        else
+        {
+            cout << "Neobrađen: "<< zahtjev->get_zahtjev() << endl;
+            temp->SpremiZahtjev(zahtjev);
 
+        }
+      //  cout << zahtjev->get_zahtjev() << endl;
+    } while (zahtjev->get_zahtjev() != "nema zahtjeva");
+    neobradeni = temp;
+    delete temp;
+    /*
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+    zahtjev = neobradeni->DohvatiZahtjev();
+    cout << zahtjev->get_zahtjev() << endl;
+*/
 #endif
 
     delete neobradeni;
